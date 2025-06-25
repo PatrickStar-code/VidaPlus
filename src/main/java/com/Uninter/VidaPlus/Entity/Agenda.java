@@ -1,0 +1,61 @@
+package com.Uninter.VidaPlus.Entity;
+
+import com.Uninter.VidaPlus.Enums.StatusAgendamentoEnum;
+import com.Uninter.VidaPlus.Enums.TipoAtendimentoEnum;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+@Data
+@Entity
+@Table(name = "agenda")
+public class Agenda {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_agenda")
+    private Long idAgenda;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "id_profissional", nullable = false)
+    private ProfissionalSaude profissional;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "id_paciente", nullable = false)
+    private Paciente paciente;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "id_unidade", nullable = false)
+    private Unidade unidade;
+
+    @NotNull
+    @Column(name = "data", nullable = false)
+    private LocalDateTime data;
+
+    @NotNull
+    @Column(name = "hora_inicio", nullable = false)
+    private LocalDateTime horaInicio;
+
+    @NotNull
+    @Column(name = "hora_fim", nullable = false)
+    private LocalDateTime horaFim;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_atendimento", nullable = false)
+    private TipoAtendimentoEnum tipoAtendimento;
+
+    @NotNull
+    @Column(name = "modalidade_online", nullable = false)
+    private Boolean modalidadeOnline = false;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusAgendamentoEnum status;
+}

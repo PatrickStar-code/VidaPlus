@@ -1,0 +1,27 @@
+package com.Uninter.VidaPlus.Entity;
+
+import com.Uninter.VidaPlus.Enums.EspecialidadeEnum;
+import jakarta.persistence.*;
+import lombok.Data;
+
+
+@Data
+@Entity
+@Table(name = "profissional_saude")
+public class ProfissionalSaude extends Pessoa {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_profissional_saude")
+    private Long idProfissionalSaude;
+
+    @Column(name = "registro_profissional")
+    private String registroProfissional;
+
+    @Column(name = "especialidade")
+    @Enumerated(EnumType.STRING)
+    private EspecialidadeEnum especialidade;
+
+    @Column(name = "id_unidade")
+    private Unidade unidade;
+
+}

@@ -1,0 +1,28 @@
+package com.Uninter.VidaPlus.Enums;
+
+public enum EspecialidadeEnum {
+    clinico_geral,
+    cardiologia,
+    dermatologia,
+    ginecologia,
+    pediatria,
+    ortopedia,
+    neurologia,
+    psiquiatria,
+    oftalmologia,
+    otorrinolaringologia,
+    endocrinologia,
+    gastroenterologia,
+    nefrologia,
+    oncologia,
+    reumatologia,
+    urologia,
+    infectologia,
+    fisioterapia,
+    enfermagem,
+    nutricionista,
+    psicologia,
+    tecnico_enfermagem,
+    farmacia,
+    radiologia,
+}
