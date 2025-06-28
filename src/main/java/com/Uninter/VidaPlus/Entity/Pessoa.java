@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @MappedSuperclass
-public abstract class Pessoa {
+public abstract class Pessoa  {
 
     @NotBlank
     @Column(name = "nome", nullable = false)

@@ -1,9 +1,9 @@
 package com.Uninter.VidaPlus.Repository;
 
-import com.Uninter.VidaPlus.Entity.AgendaEntity;
+import com.Uninter.VidaPlus.Entity.UnidadeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AgendaRepository extends JpaRepository<AgendaEntity, Long> {
+public interface UnidadeRepository extends JpaRepository<UnidadeEntity, Long> {
 }

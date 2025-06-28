@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "agenda")
-public class Agenda {
+public class AgendaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,17 +21,17 @@ public class Agenda {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_profissional", nullable = false)
-    private ProfissionalSaude profissional;
+    private ProfissionalSaudeEntity profissional;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_paciente", nullable = false)
-    private Paciente paciente;
+    private PacienteEntity paciente;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_unidade", nullable = false)
-    private Unidade unidade;
+    private UnidadeEntity unidade;
 
     @NotNull
     @Column(name = "data", nullable = false)

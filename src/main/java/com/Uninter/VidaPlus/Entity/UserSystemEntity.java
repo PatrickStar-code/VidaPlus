@@ -1,7 +1,9 @@
 package com.Uninter.VidaPlus.Entity;
 
+import com.Uninter.VidaPlus.Controller.Request.UserSystemRequest;
 import com.Uninter.VidaPlus.Enums.RolesEnum;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "user_system")
-public class UserSystem  implements UserDetails {
+public class UserSystemEntity  implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,6 +71,16 @@ public class UserSystem  implements UserDetails {
     @Column(name = "ultimo_login")
     private LocalDateTime ultimoLogin;
 
+    public UserSystemEntity(@Valid UserSystemRequest userSystemRequest, String passwordEncrypted) {
+        this.login = userSystemRequest.login();
+        this.email = userSystemRequest.email();
+        this.passwordHash = passwordEncrypted;
+        this.role = userSystemRequest.role();
+        this.statusAtivo = userSystemRequest.statusAtivo();
+        this.dataCriacao = LocalDateTime.now();
+        this.dataAtualizacao = null;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(this.role == RolesEnum.ADMINISTRADOR){
@@ -86,7 +98,7 @@ public class UserSystem  implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.getUsername();
+        return this.login;
     }
 
     @Override
@@ -107,5 +119,9 @@ public class UserSystem  implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
+    }
+
+    public void setPassword(String encode) {
+        this.passwordHash = encode;
     }
 }

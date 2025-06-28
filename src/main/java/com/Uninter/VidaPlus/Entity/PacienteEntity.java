@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "paciente")
-public class Paciente extends Pessoa {
+public class PacienteEntity extends Pessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Paciente extends Pessoa {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_unidade", nullable = false)
-    private Unidade unidade;
+    private UnidadeEntity unidade;
 
     @NotNull
     @Column(name = "consentimento_lgpd", nullable = false)
@@ -39,4 +39,5 @@ public class Paciente extends Pessoa {
     @LastModifiedDate
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
+
 }

@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "unidade")
-public class Unidade {
+public class UnidadeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -78,10 +78,10 @@ public class Unidade {
     private String observacoes;
 
     @OneToMany(mappedBy = "unidade")
-    private List<Paciente> pacientes;
+    private List<PacienteEntity> pacientes;
 
     @OneToMany(mappedBy = "unidade")
-    private List<ProfissionalSaude> profissionais;
+    private List<ProfissionalSaudeEntity> profissionais;
 
     @CreatedDate
     @Column(name = "data_criacao", updatable = false)

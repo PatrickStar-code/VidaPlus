@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "profissional_saude")
-public class ProfissionalSaude extends Pessoa {
+public class ProfissionalSaudeEntity extends Pessoa{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class ProfissionalSaude extends Pessoa {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_unidade", nullable = false)
-    private Unidade unidade;
+    private UnidadeEntity unidade;
 
     @CreatedDate
     @Column(name = "data_criacao", updatable = false)
@@ -47,4 +47,6 @@ public class ProfissionalSaude extends Pessoa {
     @LastModifiedDate
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
+
+
 }
