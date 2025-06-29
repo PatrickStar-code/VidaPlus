@@ -20,23 +20,20 @@ public class ErrorHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
-    @ExceptionHandler(EmailExistException.class)
-    public ResponseEntity<String> handleEmailExistException(EmailExistException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-    }
 
-    @ExceptionHandler(LoginExistException.class)
-    public ResponseEntity<String> handleLoginExistException(LoginExistException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-    }
-
-    @ExceptionHandler(CpfExistException.class)
-    public ResponseEntity<String> handleCpfExistException(CpfExistException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-    }
 
     @ExceptionHandler(CpfInvalidException.class)
     public ResponseEntity<String> handleResponseStatusException(ResponseStatusException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ValueExistException.class)
+    public ResponseEntity<String> handleValueExist(ValueExistException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<String> handleNullPointerException(NullPointerException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
@@ -53,6 +50,11 @@ public class ErrorHandler {
     @ExceptionHandler(IdConflictException.class)
     public ResponseEntity<String> handleIdConflictException(IdConflictException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidArgumentException.class)
+    public ResponseEntity<String> handleInvalidPasswordException(InvalidArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }
 

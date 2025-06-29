@@ -7,9 +7,9 @@ import com.Uninter.VidaPlus.Entity.PacienteEntity;
 import com.Uninter.VidaPlus.Entity.ProfissionalSaudeEntity;
 import com.Uninter.VidaPlus.Entity.UserSystemEntity;
 import com.Uninter.VidaPlus.Exceptions.IdConflictException;
-import com.Uninter.VidaPlus.Exceptions.LoginExistException;
 import com.Uninter.VidaPlus.Exceptions.NotFoundException;
 import com.Uninter.VidaPlus.Exceptions.PasswordConfirmIncorrectException;
+import com.Uninter.VidaPlus.Exceptions.ValueExistException;
 import com.Uninter.VidaPlus.Repository.PacienteRepository;
 import com.Uninter.VidaPlus.Repository.ProfissionalSaudeRepository;
 import com.Uninter.VidaPlus.Repository.UserSystemRepository;
@@ -67,12 +67,12 @@ public class UserSystemService implements UserDetailsService {
         }
 
         if(userRepository.findByEmailIgnoreCase(data.email()).isPresent()){
-            throw new LoginExistException("EMAIL_EXIST", "Email ja cadastrado!");
+            throw new ValueExistException("EMAIL_EXIST", "Email ja cadastrado!");
         }
 
 
         if(userRepository.findByLoginIgnoreCase(data.login()).isPresent()){
-            throw new LoginExistException("LOGIN_EXIST", "Login já cadastrado!");
+            throw new ValueExistException("LOGIN_EXIST", "Login já cadastrado!");
         }
 
         if(data.idPaciente() != null && data.idProfissional() != null){

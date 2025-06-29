@@ -2,11 +2,10 @@ package com.Uninter.VidaPlus.Service;
 
 import com.Uninter.VidaPlus.Controller.Mapper.PacienteMapper;
 import com.Uninter.VidaPlus.Controller.Request.PacienteRequest;
-import com.Uninter.VidaPlus.Controller.Response.PacienteResponse;
 import com.Uninter.VidaPlus.Entity.PacienteEntity;
-import com.Uninter.VidaPlus.Exceptions.CpfExistException;
 import com.Uninter.VidaPlus.Exceptions.CpfInvalidException;
-import com.Uninter.VidaPlus.Exceptions.EmailExistException;
+import com.Uninter.VidaPlus.Exceptions.InvalidArgumentException;
+import com.Uninter.VidaPlus.Exceptions.ValueExistException;
 import com.Uninter.VidaPlus.Repository.PacienteRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +37,11 @@ public class PacienteService {
 
     @Transactional
     public PacienteEntity registerPaciente(PacienteRequest paciente) {
+
+        if(paciente.unidade() == null){
+            throw new NullPointerException( "Unidade nao pode ser nula!");
+        }
+
         validateEmail(paciente);
         validateCpf(paciente);
         return pacienteRepository.save(PacienteMapper.toPacienteEntity(paciente));
@@ -45,12 +49,19 @@ public class PacienteService {
 
     @Transactional
     public Optional<PacienteEntity> editPaciente(Long id, PacienteRequest paciente) {
-        validateEmail(paciente);
-        validateCpf(paciente);
+
 
         Optional<PacienteEntity> pacienteEntity = pacienteRepository.findById(id);
 
-        if (pacienteEntity.isPresent()) {
+        if(paciente.cep().length() != 8){
+            throw new InvalidArgumentException("INVALID_ERROR", "CEP invalido!");
+        }
+
+        if ( paciente.cpf().length() != 11) {
+            throw new InvalidArgumentException("INVALID_ERROR", "CPF invalido!");
+        }
+
+            if (pacienteEntity.isPresent()) {
             PacienteEntity pacienteEntity1 = pacienteEntity.get();
             pacienteEntity1.setNome(paciente.nome());
             pacienteEntity1.setGenero(paciente.genero());
@@ -75,7 +86,7 @@ public class PacienteService {
         if (paciente.cpf() != null && paciente.cpf().length() == 11) {
             Optional<PacienteEntity> cpfNotNull = pacienteRepository.findByCpf(paciente.cpf());
             if (cpfNotNull.isPresent()) {
-                throw new CpfExistException("CPF_EXIST", "CPF ja cadastrado!");
+                throw new ValueExistException("CPF_EXIST", "CPF ja cadastrado!");
             }
         }
         else{
@@ -87,7 +98,7 @@ public class PacienteService {
         if (paciente.email() != null) {
             Optional<PacienteEntity> emailNotNull = pacienteRepository.findByEmail(paciente.email());
             if (emailNotNull.isPresent()) {
-                throw new EmailExistException("EMAIL_EXIST", "Email ja cadastrado!");
+                throw new ValueExistException("EMAIL_EXIST", "Email ja cadastrado!");
             }
         }
     }
