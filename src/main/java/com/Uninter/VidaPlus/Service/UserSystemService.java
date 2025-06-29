@@ -60,7 +60,16 @@ public class UserSystemService implements UserDetailsService {
 
     @Transactional
     public UserSystemEntity registerUser(@Valid UserSystemRequest data) {
-        System.out.println(data);
+
+
+        if(userRepository.findByPacienteIdPaciente(data.idPaciente()).isPresent() || userRepository.findByProfissionalIdProfissional(data.idProfissional()).isPresent()) {
+            throw new IdConflictException("ID_CONFLICT", "Conflito de IDs , id do paciente ou id do profissional ja cadastrado!");
+        }
+
+        if(userRepository.findByEmailIgnoreCase(data.email()).isPresent()){
+            throw new LoginExistException("EMAIL_EXIST", "Email ja cadastrado!");
+        }
+
 
         if(userRepository.findByLoginIgnoreCase(data.login()).isPresent()){
             throw new LoginExistException("LOGIN_EXIST", "Login já cadastrado!");

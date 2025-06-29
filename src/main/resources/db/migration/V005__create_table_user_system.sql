@@ -10,6 +10,6 @@ CREATE TABLE user_system (
     data_criacao TIMESTAMP,
     data_atualizacao TIMESTAMP,
     ultimo_login TIMESTAMP,
-    CONSTRAINT fk_user_paciente FOREIGN KEY (id_paciente) REFERENCES paciente(id_paciente),
-    CONSTRAINT fk_user_profissional FOREIGN KEY (id_profissional) REFERENCES profissional_saude(id_profissional)
+    CONSTRAINT fk_user_paciente FOREIGN KEY (id_paciente) REFERENCES paciente(id_paciente) ON DELETE CASCADE,
+    CONSTRAINT fk_user_profissional FOREIGN KEY (id_profissional) REFERENCES profissional_saude(id_profissional) ON DELETE CASCADE
 );

@@ -1,6 +1,7 @@
 package com.Uninter.VidaPlus.Config;
 
 import com.Uninter.VidaPlus.Entity.UserSystemEntity;
+import com.Uninter.VidaPlus.Exceptions.NotFoundException;
 import com.Uninter.VidaPlus.Repository.UserSystemRepository;
 import com.Uninter.VidaPlus.Service.TokenService;
 import jakarta.servlet.FilterChain;
@@ -32,7 +33,7 @@ public class FilterTokenJWT extends OncePerRequestFilter {
             if (token != null) {
                 String login = tokenService.verifyToken(token);
                 UserSystemEntity user = userSystemRepository.findByLoginIgnoreCase(login)
-                        .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                        .orElseThrow(() -> new NotFoundException("NOT_FOUND","Usuário não encontrado !"));
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -47,12 +48,9 @@ public class FilterTokenJWT extends OncePerRequestFilter {
                 response.getWriter().write(json);
                 response.getWriter().flush();
             }
-            System.out.println("Erro no filtro JWT: " + ex.getMessage());
             return;
         }
-        System.out.println("Chamando filterChain.doFilter");
         filterChain.doFilter(request, response);
-        System.out.println("Depois do filterChain.doFilter");
 
     }
 

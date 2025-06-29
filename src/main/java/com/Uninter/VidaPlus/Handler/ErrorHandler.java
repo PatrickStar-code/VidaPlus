@@ -20,8 +20,24 @@ public class ErrorHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    @ExceptionHandler(EmailExistException.class)
+    public ResponseEntity<String> handleEmailExistException(EmailExistException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(LoginExistException.class)
     public ResponseEntity<String> handleLoginExistException(LoginExistException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(CpfExistException.class)
+    public ResponseEntity<String> handleCpfExistException(CpfExistException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(CpfInvalidException.class)
+    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)

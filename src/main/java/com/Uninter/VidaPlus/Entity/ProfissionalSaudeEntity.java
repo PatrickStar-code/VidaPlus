@@ -5,15 +5,20 @@ import com.Uninter.VidaPlus.Enums.EspecialidadeEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @Table(name = "profissional_saude")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@SuperBuilder
 public class ProfissionalSaudeEntity extends Pessoa{
 
     @Id
