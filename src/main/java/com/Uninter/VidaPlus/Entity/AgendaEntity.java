@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @Entity
@@ -39,11 +40,11 @@ public class AgendaEntity {
 
     @NotNull
     @Column(name = "hora_inicio", nullable = false)
-    private LocalDateTime horaInicio;
+    private LocalTime horaInicio;
 
     @NotNull
     @Column(name = "hora_fim", nullable = false)
-    private LocalDateTime horaFim;
+    private LocalTime horaFim;
 
     @NotNull
     @Enumerated(EnumType.STRING)
