@@ -1,10 +1,13 @@
 package com.Uninter.VidaPlus.Controller.Response;
 
 import com.Uninter.VidaPlus.Enums.StatusAgendamentoEnum;
+import com.Uninter.VidaPlus.Enums.TipoAtendimentoEnum;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Builder
 public record AgendaResponse(
         ProfissionalSaudeResponse profissionalSaude,
         PacienteResponse paciente,
@@ -12,8 +15,8 @@ public record AgendaResponse(
         LocalDate dataAgendamento,
         LocalTime horaAgendamentoInicio,
         LocalTime horaAgendamentoFim,
+        TipoAtendimentoEnum tipoAtendimento,
         Boolean modalidadeOnline,
-        StatusAgendamentoEnum statusAgendad
-){
-
+        StatusAgendamentoEnum statusAgendamento
+) {
 }

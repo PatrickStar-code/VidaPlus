@@ -1,0 +1,3 @@
+ALTER TABLE agenda
+  ALTER COLUMN hora_inicio TYPE TIME,
+  ALTER COLUMN hora_fim TYPE TIME;

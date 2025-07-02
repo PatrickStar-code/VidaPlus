@@ -40,6 +40,7 @@ public class UnidadeMapper {
         List<Long> profissionais = unidadeEntity.getProfissionais().stream().map(ProfissionalSaudeEntity::getIdProfissional).toList();
 
         return UnidadeResponse.builder()
+                .id(unidadeEntity.getIdUnidade())
                 .nome(unidadeEntity.getNome())
                 .cep(unidadeEntity.getCep())
                 .cidade(unidadeEntity.getCidade())

@@ -4,13 +4,19 @@ import com.Uninter.VidaPlus.Enums.StatusAgendamentoEnum;
 import com.Uninter.VidaPlus.Enums.TipoAtendimentoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "agenda")
 public class AgendaEntity {
 
