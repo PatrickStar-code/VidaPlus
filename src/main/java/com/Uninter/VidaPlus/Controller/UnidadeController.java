@@ -34,6 +34,7 @@ public class UnidadeController {
     }
 
 
+
     @PostMapping("/")
     public ResponseEntity<UnidadeResponse> createUnidade(@RequestBody UnidadeRequest unidade) {
 

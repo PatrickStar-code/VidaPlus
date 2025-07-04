@@ -10,15 +10,16 @@ public class AgendaMapper {
 
     public AgendaResponse toAgendaResponse(AgendaEntity agenda) {
         return AgendaResponse.builder()
-                .profissionalSaude(ProfissionalSaudeMapper.toProfissionalSaudeResponse(agenda.getProfissional()))
-                .paciente(PacienteMapper.toPacienteResponse(agenda.getPaciente()))
-                .unidade(UnidadeMapper.toUnidadeReesponse(agenda.getUnidade()))
                 .dataAgendamento(agenda.getData().toLocalDate())
                 .horaAgendamentoInicio(agenda.getHoraInicio())
                 .horaAgendamentoFim(agenda.getHoraFim())
                 .tipoAtendimento(agenda.getTipoAtendimento())
                 .modalidadeOnline(agenda.getModalidadeOnline())
                 .statusAgendamento(agenda.getStatus())
+                .idAgendamento(agenda.getIdAgenda())
+                .profissionalSaude(ProfissionalSaudeMapper.toProfissionalSaudeResponse(agenda.getProfissional()))
+                .paciente(PacienteMapper.toPacienteResponse(agenda.getPaciente()))
+                .unidade(UnidadeMapper.toUnidadeReesponse(agenda.getUnidade()))
                 .build();
     }
 

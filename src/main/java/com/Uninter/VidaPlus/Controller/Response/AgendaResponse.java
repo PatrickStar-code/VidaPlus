@@ -9,6 +9,7 @@ import java.time.LocalTime;
 
 @Builder
 public record AgendaResponse(
+        Long idAgendamento,
         ProfissionalSaudeResponse profissionalSaude,
         PacienteResponse paciente,
         UnidadeResponse unidade,

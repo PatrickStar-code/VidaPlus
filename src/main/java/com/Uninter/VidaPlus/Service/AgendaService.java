@@ -1,17 +1,10 @@
 package com.Uninter.VidaPlus.Service;
 
-import com.Uninter.VidaPlus.Controller.Mapper.AgendaMapper;
 import com.Uninter.VidaPlus.Controller.Request.AgendaRequest;
-import com.Uninter.VidaPlus.Controller.Response.AgendaResponse;
-import com.Uninter.VidaPlus.Entity.AgendaEntity;
-import com.Uninter.VidaPlus.Entity.PacienteEntity;
-import com.Uninter.VidaPlus.Entity.ProfissionalSaudeEntity;
-import com.Uninter.VidaPlus.Entity.UnidadeEntity;
+import com.Uninter.VidaPlus.Entity.*;
 import com.Uninter.VidaPlus.Exceptions.NotFoundException;
-import com.Uninter.VidaPlus.Repository.AgendaRepository;
-import com.Uninter.VidaPlus.Repository.PacienteRepository;
-import com.Uninter.VidaPlus.Repository.ProfissionalSaudeRepository;
-import com.Uninter.VidaPlus.Repository.UnidadeRepository;
+import com.Uninter.VidaPlus.Repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +19,7 @@ public class AgendaService {
     private final PacienteRepository pacienteRepository;
     private final ProfissionalSaudeRepository profissionalSaudeRepository;
     private final UnidadeRepository unidadeRepository;
+    private final VideoChamadaRepository videoChamadaRepository;
 
     public List<AgendaEntity> getAgenda() {
         return agendaRepository.findAll();
@@ -35,10 +29,17 @@ public class AgendaService {
         return Optional.ofNullable(agendaRepository.findById(id).orElseThrow(() -> new NotFoundException("NOT_FOUND", "Agenda nao encontrada!")));
     }
 
+    @Transactional
     public void deleteAgenda(Long id) {
+        Optional<AgendaEntity> agenda = agendaRepository.findById(id);
+        if (agenda.isEmpty()) throw new NotFoundException("NOT_FOUND", "Agenda nao encontrada!");
+        if(agenda.get().getModalidadeOnline() == true) {
+            videoChamadaRepository.deleteByIdAgenda_IdAgenda(agenda.get().getIdAgenda());
+        }
         agendaRepository.deleteById(id);
     }
 
+    @Transactional
     public AgendaEntity registerAgenda(AgendaRequest agenda) {
         // Validar os IDs
         if (agenda.Paciente() == null || agenda.Paciente().getIdPaciente() == null)
@@ -73,7 +74,18 @@ public class AgendaService {
                 .unidade(unidade)
                 .build();
 
-        return agendaRepository.save(entity);
+        var agendaEntity = agendaRepository.save(entity);
+        if(agendaEntity.getModalidadeOnline()) {
+            String url = "http://meet.google.com/VideoChamada/" + agendaEntity.getIdAgenda();
+            if (agendaEntity.getModalidadeOnline()) {
+                VideoChamadaEntity videoChamada = VideoChamadaEntity.builder()
+                        .idAgenda(agendaEntity)
+                        .urlSessao(url)
+                        .build();
+                videoChamadaRepository.save(videoChamada);
+            }
+        }
+        return agendaEntity;
     }
 
     private PacienteEntity findPacienteById(PacienteEntity id) {
@@ -87,4 +99,43 @@ public class AgendaService {
     private UnidadeEntity findUnidadeById(UnidadeEntity id) {
         return  unidadeRepository.findById(id.getIdUnidade()).orElseThrow(() -> new NotFoundException("NOT_FOUND", "Unidade " + id.getIdUnidade() + " nao encontrada!"));
     }
+
+    public AgendaEntity editAgenda(Long id, AgendaRequest agenda) {
+        PacienteEntity paciente = pacienteRepository.findById(agenda.Paciente().getIdPaciente())
+                .orElseThrow(() -> new NotFoundException("NOT_FOUND", "Paciente não encontrado"));
+
+        ProfissionalSaudeEntity profissional = profissionalSaudeRepository.findById(agenda.Profissional().getIdProfissional())
+                .orElseThrow(() -> new NotFoundException("NOT_FOUND", "Profissional não encontrado"));
+
+        UnidadeEntity unidade = unidadeRepository.findById(agenda.Unidade().getIdUnidade())
+                .orElseThrow(() -> new NotFoundException("NOT_FOUND", "Unidade não encontrada"));
+
+
+        AgendaEntity entity = AgendaEntity.builder()
+                .data(agenda.dataAgendamento())
+                .horaInicio(agenda.horaInicio())
+                .horaFim(agenda.horaFim())
+                .tipoAtendimento(agenda.tipoAtendimento())
+                .modalidadeOnline(agenda.modalidadeOnline())
+                .status(agenda.statusAgendamento())
+                .profissional(profissional)
+                .paciente(paciente)
+                .unidade(unidade)
+                .build();
+
+        entity.setIdAgenda(id);
+        var agendaEntity = agendaRepository.save(entity);
+        if(agendaEntity.getModalidadeOnline()) {
+            String url = "http://meet.google.com/VideoChamada/" + agendaEntity.getIdAgenda();
+            if (agendaEntity.getModalidadeOnline()) {
+                VideoChamadaEntity videoChamada = VideoChamadaEntity.builder()
+                        .idAgenda(agendaEntity)
+                        .urlSessao(url)
+                        .build();
+                videoChamadaRepository.save(videoChamada);
+            }
+        }
+        return agendaEntity;
+    }
+
 }

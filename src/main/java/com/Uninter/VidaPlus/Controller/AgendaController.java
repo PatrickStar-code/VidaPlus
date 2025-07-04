@@ -46,4 +46,11 @@ public class AgendaController {
         AgendaEntity agendaEntity = agendaService.registerAgenda(agenda);
         return ResponseEntity.ok(AgendaMapper.toAgendaResponse(agendaEntity));
     }
+
+    @PutMapping("/{id}")
+    public  ResponseEntity<AgendaResponse> updateAgenda(@RequestBody AgendaRequest agenda, @PathVariable Long id) {
+        Optional<AgendaEntity> agendaEntity = agendaService.getAgendaById(id);
+        if (agendaEntity.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(AgendaMapper.toAgendaResponse(agendaService.editAgenda(id, agenda)));
+    }
 }
