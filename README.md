@@ -69,3 +69,32 @@ Autenticação baseada em JWT.
 - `GET /vidaPlus/videochamada/{id}` – Buscar por ID  
 - `PUT /vidaPlus/videochamada/{id}` – Atualizar observações  
 
+
+Através dela é possível testar os endpoints e visualizar os contratos da API de forma intuitiva.
+
+---
+
+## 🧰 Como Rodar o Projeto Localmente
+
+### Pré-requisitos
+
+- Java 17+  
+- Maven  
+- PostgreSQL (ou o banco de sua escolha)  
+
+### Passos
+
+```bash
+# Clone o repositório
+git clone https://github.com/SeuUsuario/VidaPlus.git
+
+# Acesse o diretório
+cd VidaPlus
+
+# Configure o application.properties ou application.yml com suas credenciais de banco
+
+# Compile o projeto
+./mvnw clean install
+
+# Execute a aplicação
+./mvnw spring-boot:run
