@@ -91,6 +91,8 @@ git clone https://github.com/SeuUsuario/VidaPlus.git
 # Acesse o diretório
 cd VidaPlus
 
+# Lembre-se de Criar apenas o banco de dados com o nome vidaPlus as tableas serão todas criadas pelo spring ao rodar o código
+
 # Configure o application.properties ou application.yml com suas credenciais de banco
 
 # Compile o projeto
