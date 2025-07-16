@@ -60,43 +60,61 @@ public class UserSystemService implements UserDetailsService {
 
     @Transactional
     public UserSystemEntity registerUser(@Valid UserSystemRequest data) {
-
-
-        if(userRepository.findByPacienteIdPaciente(data.idPaciente()).isPresent() || userRepository.findByProfissionalIdProfissional(data.idProfissional()).isPresent()) {
-            throw new IdConflictException("ID_CONFLICT", "Conflito de IDs , id do paciente ou id do profissional ja cadastrado!");
-        }
-
-        if(userRepository.findByEmailIgnoreCase(data.email()).isPresent()){
-            throw new ValueExistException("EMAIL_EXIST", "Email ja cadastrado!");
-        }
-
-
-        if(userRepository.findByLoginIgnoreCase(data.login()).isPresent()){
-            throw new ValueExistException("LOGIN_EXIST", "Login já cadastrado!");
-        }
-
-        if(data.idPaciente() != null && data.idProfissional() != null){
-            throw new IdConflictException("ID_CONFLICT", "Conflito de IDs!");
-        }
+        validateExclusiveIds(data);
+        validateEmail(data.email());
+        validateLogin(data.login());
 
         var passwordEncrypted = encriptador.encode(data.passwordHash());
         var user = new UserSystemEntity(data, passwordEncrypted);
 
-        if (data.idPaciente() != null) {
-            PacienteEntity paciente = pacienteRepository.findById(data.idPaciente())
-                    .orElseThrow(() -> new NotFoundException("NOT_FOUND","Paciente não encontrado"));
-            user.setPaciente(paciente);
-        }
-
-        if (data.idProfissional() != null) {
-            ProfissionalSaudeEntity profissional = profissionalRepository.findById(data.idProfissional())
-                    .orElseThrow(() -> new NotFoundException("NOT_FOUND","Profissional não encontrado"));
-            user.setProfissional(profissional);
-        }
-
+        associatePacienteIfPresent(user, data.idPaciente());
+        associateProfissionalIfPresent(user, data.idProfissional());
 
         return userRepository.save(user);
     }
+
+    private void validateExclusiveIds(UserSystemRequest data) {
+        if (data.idPaciente() != null && data.idProfissional() != null) {
+            throw new IdConflictException("ID_CONFLICT", "Conflito de IDs: paciente e profissional não podem ser definidos simultaneamente.");
+        }
+
+        if (data.idPaciente() != null && userRepository.findByPacienteIdPaciente(data.idPaciente()).isPresent()) {
+            throw new IdConflictException("ID_CONFLICT", "ID do paciente já cadastrado.");
+        }
+
+        if (data.idProfissional() != null && userRepository.findByProfissionalIdProfissional(data.idProfissional()).isPresent()) {
+            throw new IdConflictException("ID_CONFLICT", "ID do profissional já cadastrado.");
+        }
+    }
+
+    private void validateEmail(String email) {
+        if (userRepository.findByEmailIgnoreCase(email).isPresent()) {
+            throw new ValueExistException("EMAIL_EXIST", "Email já cadastrado!");
+        }
+    }
+
+    private void validateLogin(String login) {
+        if (userRepository.findByLoginIgnoreCase(login).isPresent()) {
+            throw new ValueExistException("LOGIN_EXIST", "Login já cadastrado!");
+        }
+    }
+
+    private void associatePacienteIfPresent(UserSystemEntity user, Long idPaciente) {
+        if (idPaciente != null) {
+            PacienteEntity paciente = pacienteRepository.findById(idPaciente)
+                    .orElseThrow(() -> new NotFoundException("NOT_FOUND", "Paciente não encontrado"));
+            user.setPaciente(paciente);
+        }
+    }
+
+    private void associateProfissionalIfPresent(UserSystemEntity user, Long idProfissional) {
+        if (idProfissional != null) {
+            ProfissionalSaudeEntity profissional = profissionalRepository.findById(idProfissional)
+                    .orElseThrow(() -> new NotFoundException("NOT_FOUND", "Profissional não encontrado"));
+            user.setProfissional(profissional);
+        }
+    }
+
 
     @Transactional
     public Optional<UserSystemEntity> updatePassword(UpdatePassword updatePassword, Long id) {
