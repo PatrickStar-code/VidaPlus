@@ -27,23 +27,44 @@ public class Security {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/api-docs/**","/swagger/**","/login", "/refresh-token", "/VidaPlus/user/register").permitAll()
-                        .anyRequest().hasAnyRole("ADMIN", "USER"))
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            if (!response.isCommitted()) {
-                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                                response.setContentType("application/json");
-                                response.getWriter().write("{\"error\": \"Não autenticado\"}");
-                            }
-                        })
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            if (!response.isCommitted()) {
-                                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                                response.setContentType("application/json");
-                                response.getWriter().write("{\"error\": \"Acesso negado\"}");
-                            }
-                        })
+                        // Rotas públicas (sem autenticação)
+                        .requestMatchers(
+                                "/api/api-docs/**",
+                                "/swagger/**",
+                                "/login",
+                                "/refresh-token",
+                                "/vidaPlus/user/register"
+                        ).permitAll()
+
+                        // Acesso ADMIN e USER: acessos gerais que ambos podem ver (mas não alterar)
+                        .requestMatchers(
+                                "/vidaPlus/agenda/{id}",
+                                "/vidaPlus/agenda",
+                                "/vidaPlus/user/{id}",
+                                "/vidaPlus/unidade",
+                                "/vidaPlus/unidade/{id}",
+                                "/vidaPlus/paciente/{id}",
+                                "/vidaPlus/profissional-saude/{id}",
+                                "/vidaPlus/videochamada/{id}"
+                        ).hasAnyRole("ADMIN", "USER")
+
+                        // Apenas USER (ex: criação de agenda)
+                        .requestMatchers(
+                                "/vidaPlus/agenda"
+                        ).hasRole("USER")
+
+                        // Apenas ADMIN (administração total)
+                        .requestMatchers(
+                                "/vidaPlus/agenda/**",
+                                "/vidaPlus/user/**",
+                                "/vidaPlus/paciente/**",
+                                "/vidaPlus/profissional-saude/**",
+                                "/vidaPlus/unidade/**",
+                                "/vidaPlus/videochamada"
+                        ).hasRole("ADMIN")
+
+                        // Qualquer outra requisição precisa estar autenticada com qualquer papel
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(filterTokenJWT, UsernamePasswordAuthenticationFilter.class)
                 .build();
