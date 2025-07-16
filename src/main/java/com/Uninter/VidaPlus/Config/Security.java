@@ -27,7 +27,7 @@ public class Security {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/refresh-token", "/VidaPlus/user/register").permitAll()
+                        .requestMatchers("/api/api-docs/**","/swagger/**","/login", "/refresh-token", "/VidaPlus/user/register").permitAll()
                         .anyRequest().hasAnyRole("ADMIN", "USER"))
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
